@@ -194,15 +194,6 @@ class CrosswordCreator():
         """
         return self.crossword.variables == set(assignment.keys())
 
-    def consistent_helper(self, x, y, assignment):
-        overlap = self.crossword.overlaps[x, y]
-        if overlap == None:
-            return True
-
-        word1 = assignment[x]
-        word2 = assignment[y]
-
-        return word1[overlap[0]] == word2[overlap[1]]
 
     def consistent(self, assignment):
         """
@@ -219,7 +210,14 @@ class CrosswordCreator():
             # Check for overlap/conflict
             for y in assignment:
                 if x != y:
-                    if not self.consistent_helper(x, y, assignment):
+                    overlap = self.crossword.overlaps[x, y]
+                    if overlap == None:
+                        continue
+
+                    word1 = assignment[x]
+                    word2 = assignment[y]
+
+                    if not word1[overlap[0]] == word2[overlap[1]]:
                         return False
         return True
 
